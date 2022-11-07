@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="Book">
+   <topic label="Ayuda">
+   		<tocitem text="Menu Principal" target="principal">
+			<tocitem text="Tabla de Contenidos" target="tabla_peliculas"/>
+			<tocitem text="Vista o Modificacion de Datos" target="ver_datos"/>
+   			<tocitem text="Configuracion de la Conexion" target="conexion"/>
+		</tocitem>
+   </topic>
+</toc>

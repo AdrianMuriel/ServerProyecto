@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+<index version="1.0">
+	<indexitem text="Menu de Benvida" target="principal">
+		<indexitem text="Taboa de Contidos" target="tabla_peliculas"/>
+		<indexitem text="Vista ou Modificacion de Datos" target="ver_datos"/>
+		<indexitem text="Configuracion da Conexion" target="conexion"/>
+	</indexitem>
+</index>

@@ -1,0 +1,331 @@
+package View;
+
+/**
+ * Este es el menú principal de la aplicación.
+ * En el se visualizará la lista de los cómics
+ * que existan en la Base de Datos.
+ * @author Adrián Muriel Zamora 
+ */
+
+//-------- IMPORTS ------------------------------------------------------------
+//-------- PAQUETES -----------------------------------------------------------
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.*;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
+
+//-------- CLASES -------------------------------------------------------------
+import Model.*;
+
+public class menuPrincipal extends JFrame {
+
+	// ----------- Cursores -----------------------------------------------------
+	private Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
+	private Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+	private Cursor selectorCursor = new Cursor(Cursor.HAND_CURSOR);
+	// ----------- Panel --------------------------------------------------------
+	private JPanel contentPane;
+	private static ArrayList<JMenu> listMenu = new ArrayList<>();
+	private static ArrayList<JLabel> listLabels = new ArrayList<>();
+	private static ArrayList<JButton> listButtons = new ArrayList<>();
+	private static ArrayList<JMenuItem> listMenuItem = new ArrayList<>();
+	// ----------- Otros --------------------------------------------------------
+	String msgAvisoCierre = "¿Estas seguro de que deseas cerrar el programa?";
+	String titleAvisoCierre = "EL PROGRAMA SE VA A CERRAR";
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					menuPrincipal frame = new menuPrincipal();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} // try/catch
+			} // END run()
+		});
+	} // END iniciar()
+
+	public menuPrincipal() {
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		setMinimumSize(new Dimension(450, 350));
+		setIconImage(
+				Toolkit.getDefaultToolkit().getImage(menuPrincipal.class.getResource("/images/icons/computer.png")));
+		setTitle("Lista de Comics - ProyectoDAM");
+		setBounds(100, 100, 450, 300);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// ----------------------------------------------------------------------------------------------------------------------------
+		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/pencil.png")));
+
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/trash.png")));
+
+		JComboBox<Comics> cmbComics = new JComboBox<Comics>();
+		JLabel lblPortada = new JLabel("");
+		lblPortada.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPortada.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/no_image.png")));
+
+		JLabel lblFecha = new JLabel("Fecha de Adquisición");
+
+		JLabel lblColeccion = new JLabel("Colección del cómic");
+
+		JLabel lblStock = new JLabel("Cantidad en stock");
+
+		JLabel lblPrecio = new JLabel("Precio del Cómic");
+
+		JLabel lblEstado = new JLabel("Estado del Cómic");
+		GroupLayout groupLayout;
+
+		JButton btnReload = new JButton("");
+		btnReload.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/refresh.png")));
+
+		{
+			groupLayout = new GroupLayout(getContentPane());
+			groupLayout.setHorizontalGroup(
+					groupLayout.createParallelGroup(Alignment.LEADING)
+							.addGroup(groupLayout.createSequentialGroup()
+									.addContainerGap()
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+											.addComponent(btnModificar, GroupLayout.PREFERRED_SIZE, 198,
+													GroupLayout.PREFERRED_SIZE)
+											.addComponent(lblEstado, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 207,
+													Short.MAX_VALUE)
+											.addComponent(lblPrecio, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 207,
+													Short.MAX_VALUE)
+											.addComponent(lblStock, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 207,
+													Short.MAX_VALUE)
+											.addComponent(lblColeccion, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+													207, Short.MAX_VALUE)
+											.addComponent(lblFecha, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+											.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+													.addComponent(cmbComics, GroupLayout.PREFERRED_SIZE, 166,
+															GroupLayout.PREFERRED_SIZE)
+													.addPreferredGap(ComponentPlacement.RELATED,
+															GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+													.addComponent(btnReload, GroupLayout.PREFERRED_SIZE, 35,
+															GroupLayout.PREFERRED_SIZE)))
+									.addGap(18)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addComponent(lblPortada, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+											.addComponent(btnEliminar, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+									.addContainerGap()));
+			groupLayout.setVerticalGroup(
+					groupLayout.createParallelGroup(Alignment.TRAILING)
+							.addGroup(groupLayout.createSequentialGroup()
+									.addContainerGap()
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addGroup(groupLayout.createSequentialGroup()
+													.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+															.addComponent(btnReload, 0, 0, Short.MAX_VALUE)
+															.addComponent(cmbComics))
+													.addGap(18)
+													.addComponent(lblFecha)
+													.addPreferredGap(ComponentPlacement.UNRELATED)
+													.addComponent(lblColeccion)
+													.addPreferredGap(ComponentPlacement.UNRELATED)
+													.addComponent(lblStock)
+													.addPreferredGap(ComponentPlacement.UNRELATED)
+													.addComponent(lblPrecio)
+													.addPreferredGap(ComponentPlacement.UNRELATED)
+													.addComponent(lblEstado))
+											.addComponent(lblPortada, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+											.addComponent(btnModificar)
+											.addComponent(btnEliminar))
+									.addContainerGap()));
+			getContentPane().setLayout(groupLayout);
+		}
+		// ----------------------------------------------------------------------------------------------------------------------------
+		JMenuBar mnBarraDeMenu = new JMenuBar();
+		setJMenuBar(mnBarraDeMenu);
+
+		JMenu mnArchivo = new JMenu("Archivo");
+		mnBarraDeMenu.add(mnArchivo);
+
+		JMenuItem mnItBuscarComic = new JMenuItem("Buscar Cómic");
+		mnItBuscarComic.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/search.png")));
+		mnArchivo.add(mnItBuscarComic);
+
+		JMenuItem mnItNuevoComic = new JMenuItem("Nuevo Cómic");
+		mnItNuevoComic.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/add.png")));
+		mnArchivo.add(mnItNuevoComic);
+
+		JMenuItem mnItSalir = new JMenuItem("Salir");
+		mnItSalir.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/exit.png")));
+		mnArchivo.add(mnItSalir);
+
+		JMenu mnAjustes = new JMenu("Ajustes");
+		mnBarraDeMenu.add(mnAjustes);
+
+		JMenuItem mnItConexion = new JMenuItem("Conexión");
+		mnItConexion.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/connection.png")));
+		mnAjustes.add(mnItConexion);
+
+		JMenu mnIdioma = new JMenu("Idioma");
+		mnIdioma.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/language.png")));
+		mnAjustes.add(mnIdioma);
+
+		JMenuItem mnItSpanish = new JMenuItem("Español");
+		mnItSpanish.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/spanish.png")));
+		mnIdioma.add(mnItSpanish);
+
+		JMenuItem mnItGalician = new JMenuItem("Gallego");
+		mnItGalician.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/galician.png")));
+		mnIdioma.add(mnItGalician);
+
+		JMenu mnAyuda = new JMenu("Ayuda");
+		mnBarraDeMenu.add(mnAyuda);
+
+		JMenuItem mnItGetHelp = new JMenuItem("Obtener Ayuda");
+		mnItGetHelp.setIcon(new ImageIcon(menuPrincipal.class.getResource("/images/icons/help.png")));
+		mnAyuda.add(mnItGetHelp);
+		// --------------------------------------------------------------------
+		// Aquí nombro cada elementos para poder traducirlos en otro método
+		// --------------------------------------------------------------------
+		{
+			mnAyuda.setName("mnAyuda");
+			mnAjustes.setName("mnAjustes");
+			mnArchivo.setName("mnArchivo");
+
+			lblColeccion.setName("lblColeccion");
+			lblEstado.setName("lblEstado");
+			lblFecha.setName("lblFecha");
+			lblPrecio.setName("lblPrecio");
+			lblStock.setName("lblStock");
+
+			mnItSalir.setName("mnItSalir");
+			mnIdioma.setName("mnIdioma");
+			mnItGetHelp.setName("mnItGetHelp");
+			mnItSpanish.setName("mnItSpanish");
+			mnItGalician.setName("mnItGalician");
+			mnItConexion.setName("mnItConexion");
+			mnItNuevoComic.setName("mnItNuevoComic");
+			mnItBuscarComic.setName("mnItBuscarComic");
+
+			btnEliminar.setName("btnEliminar");
+			btnModificar.setName("btnModificar");
+		}
+		// --------------------------------------------------------------------
+		// Aquí añado todos los elementos traducibles a una lista para facilitar la
+		// traducción
+		// --------------------------------------------------------------------
+		{
+			// --------------------------------------------------------------
+			listButtons.add(btnEliminar);
+			listButtons.add(btnModificar);
+			// --------------------------------------------------------------
+			listLabels.add(lblColeccion);
+			listLabels.add(lblEstado);
+			listLabels.add(lblFecha);
+			listLabels.add(lblPrecio);
+			listLabels.add(lblStock);
+			// ----------------------------------------------------------------
+			listMenu.add(mnAjustes);
+			listMenu.add(mnArchivo);
+			listMenu.add(mnAyuda);
+			listMenu.add(mnIdioma);
+			// --------------------------------------------------------------
+			listMenuItem.add(mnItBuscarComic);
+			listMenuItem.add(mnItConexion);
+			listMenuItem.add(mnItGalician);
+			listMenuItem.add(mnItSpanish);
+			listMenuItem.add(mnItGetHelp);
+			listMenuItem.add(mnItNuevoComic);
+			listMenuItem.add(mnItSalir);
+			// --------------------------------------------------------------
+		}
+
+		// ----------------------------------------------------------------------------------------------------------------------------
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				setCursor(waitCursor);
+				setCursor(defaultCursor);
+			} // END windowOpened
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				setCursor(waitCursor);
+				setCursor(defaultCursor);
+			} // END windowClosing
+		});
+		mnItSalir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cerrarPrograma();
+			} // END mnItSalir
+		});
+		mnItSpanish.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END mnItSpanish
+		});
+		mnItGalician.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END mnItGalician
+		});
+		cmbComics.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				setCursor(waitCursor);
+				setCursor(defaultCursor);
+			}
+		});
+		btnReload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setCursor(waitCursor);
+				setCursor(defaultCursor);
+			}// END btnReload
+		});
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END btnEliminar
+		});
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END btnModificar
+		});
+		mnItNuevoComic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END mnItNuevoComic
+		});
+		mnItBuscarComic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END mnItBuscarComic
+		});
+		mnItConexion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			} // END mnItConexion
+		});
+		cmbComics.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				setCursor(selectorCursor);
+			}// END cmbComics mouseEntered
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setCursor(defaultCursor);
+			}// END cmbComics mouseExited
+		});
+	} // END menuPrincipal()
+
+	/**
+	 * Cierra el programa mediante una confirmación
+	 */
+	private void cerrarPrograma() {
+		int opcion = JOptionPane.showConfirmDialog(null, msgAvisoCierre, titleAvisoCierre, 0, 2);
+		if (opcion == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		} // if
+	}
+
+} // END menuPrincipal class

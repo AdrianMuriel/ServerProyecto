@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+<map version="2.0">
+	<mapID target="principal" url="html/es/principal.html" >
+	<mapID target="conexion" url="html/es/conexion.html" >
+	<mapID target="tabla_peliculas" url="html/es/tabla_peliculas.html" >
+	<mapID target="ver_datos" url="html/es/modificar.html" >
+	</mapID>
+</map>
