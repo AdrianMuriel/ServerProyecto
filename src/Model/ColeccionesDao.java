@@ -1,18 +1,39 @@
 package Model;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import Controller.gestionarConexion;
 
 public class ColeccionesDao {
 
-    private Connection con;
+    public ArrayList<Colecciones> getListaColecciones() {
+        ArrayList<Colecciones> listaColecciones = new ArrayList<Colecciones>();
 
-    public ColeccionesDao() {
-        con = gestionarConexion.getConexion();
+        try {
+            String consulta = "SELECT * FROM colecciones";
+            PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
+            ResultSet tablas = gestionarConexion.getConexion().getMetaData().getTables(null, null, "comics", null);
+            if (tablas.next()) {
+                ResultSet res = sentencia.executeQuery(consulta);
+                while (res.next()) {
+                    Colecciones col = new Colecciones(res.getInt(1), res.getString(2));
+                    listaColecciones.add(col);
+                }
+                res.close();
+            }
+
+            sentencia.close();
+            return listaColecciones;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al listar las Colecciones");
+            return null;
+        }
     }
 
     public Colecciones getColeccion(int numCol) {
@@ -28,7 +49,6 @@ public class ColeccionesDao {
             }
 
             sentencia.close();
-            con.close();
             return col;
         } catch (SQLException ex) {
             ex.printStackTrace();

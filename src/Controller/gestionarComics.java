@@ -30,12 +30,42 @@ public class gestionarComics {
 
     public int removeComic(Comics c) {
         try {
-            out.writeObject("EliminarComic-" + c.getTitulo() + "-" + c.getNum_col());
+            out.writeObject("EliminarComic··" + c.getTitulo() + "··" + c.getNum_col());
             int result = (int) in.readObject();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    public int addComic(Comics c, String imgPath) {
+        try {
+            out.writeObject(
+                    "InsertarComic··" +
+                            c.getTitulo() + "··" +
+                            c.getNum_col() + "··" +
+                            c.getPrecio() + "··" +
+                            c.getCantidad() + "··" +
+                            imgPath + "··" +
+                            c.getFecha() + "··" +
+                            c.getEstado());
+            int result = (int) in.readObject();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public Comics searchComic(String titulo) {
+        try {
+            out.writeObject("BuscarComic··" + titulo);
+            Comics result = (Comics) in.readObject();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

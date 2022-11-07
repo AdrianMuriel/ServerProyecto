@@ -349,21 +349,38 @@ public class menuPrincipal extends JFrame {
 				setCursor(defaultCursor);
 			} // END btnEliminar
 		});
-		btnModificar.addActionListener(new ActionListener() {
+		mnItBuscarComic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			} // END btnModificar
+				setCursor(waitCursor);
+				String titulo = JOptionPane.showInputDialog(null, "Como se llama el cómic?", "Comic Ejemplo 2");
+				if (titulo.length() > 0) {
+					gestionarConexion.conectar();
+					Comics c = gestionarSockets.gestCom.searchComic(titulo);
+					gestionarConexion.cerrarConexion();
+					if (c != null) {
+						menuComics.iniciar(c, "Modificar Comic");
+					} else {
+						JOptionPane.showMessageDialog(null, "No existe el comic " + titulo, "ERROR", 0);
+					}
+				}
+				setCursor(defaultCursor);
+			} // END mnItBuscarComic
 		});
 		mnItNuevoComic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				menuComics.iniciar(null, "Crear Cómic");
 			} // END mnItNuevoComic
-		});
-		mnItBuscarComic.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			} // END mnItBuscarComic
 		});
 		mnItConexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				menuConexion.iniciar();
 			} // END mnItConexion
+		});
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Comics c = (Comics) cmbComics.getSelectedItem();
+				menuComics.iniciar(c, "Crear Comic");
+			} // END btnModificar
 		});
 		cmbComics.addMouseListener(new MouseAdapter() {
 			@Override
