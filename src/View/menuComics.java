@@ -467,7 +467,7 @@ public class menuComics extends JDialog {
                         if (titulo == "Crear Cómic") {
                             gestionarSockets.gestCom.addComic(comic, imgPath);
                         } else {
-                            // gestionarComics.modificarComic(comic);
+                            gestionarSockets.gestCom.updateComic(comic, imgPath);
                         }
                         gestionarConexion.getConexion().commit();
 

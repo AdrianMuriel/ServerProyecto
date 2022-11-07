@@ -39,6 +39,25 @@ public class gestionarComics {
         }
     }
 
+    public int updateComic(Comics c, String imgPath) {
+        try {
+            out.writeObject(
+                    "ModificarComic··" +
+                            c.getTitulo() + "··" +
+                            c.getNum_col() + "··" +
+                            c.getPrecio() + "··" +
+                            c.getCantidad() + "··" +
+                            imgPath + "··" +
+                            c.getFecha() + "··" +
+                            c.getEstado());
+            int result = (int) in.readObject();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public int addComic(Comics c, String imgPath) {
         try {
             out.writeObject(

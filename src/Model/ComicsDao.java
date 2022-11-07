@@ -71,6 +71,41 @@ public class ComicsDao {
         }
     }
 
+    public void updateComic(
+            String titulo,
+            int num_coleccion,
+            float precio,
+            int cantidad,
+            FileInputStream img,
+            File portada,
+            Date fecha,
+            String estado) {
+        try {
+            String consulta = "UPDATE comics SET portada = ?,fechaAdquisicion = ?,cantidadStock = ?,precio = ?,estado = ? WHERE num_coleccion = ? AND titulo = ?";
+            PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
+            sentencia.setBinaryStream(1, img, (int) portada.length());
+            sentencia.setDate(2, fecha);
+            sentencia.setInt(3, cantidad);
+            sentencia.setFloat(4, precio);
+            sentencia.setString(5, estado);
+            sentencia.setInt(6, num_coleccion);
+            sentencia.setString(7, titulo);
+            sentencia.executeUpdate();
+
+            img.close();
+            gestionarConexion.getConexion().commit();
+
+        } catch (SQLException | IOException ex) {
+            try {
+                ex.printStackTrace();
+                gestionarConexion.getConexion().rollback();
+                JOptionPane.showMessageDialog(null, "Error al insertar el Cómic");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public Comics searchComic(String titulo) {
         Comics c = null;
         try {

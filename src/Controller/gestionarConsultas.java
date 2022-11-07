@@ -63,6 +63,20 @@ public class gestionarConsultas extends Thread {
                             java.sql.Date.valueOf(comando.split("··")[6]),
                             comando.split("··")[7]);
                     out.writeObject(1);
+                } else if (comando.split("··")[0].equalsIgnoreCase("ModificarComic")) {
+                    ComicsDao comDao = new ComicsDao();
+                    File img = new File(comando.split("··")[5]);
+                    FileInputStream fis = new FileInputStream(img);
+                    comDao.updateComic(
+                            comando.split("··")[1],
+                            Integer.valueOf(comando.split("··")[2]),
+                            Float.valueOf(comando.split("··")[3]),
+                            Integer.valueOf(comando.split("··")[4]),
+                            fis,
+                            img,
+                            java.sql.Date.valueOf(comando.split("··")[6]),
+                            comando.split("··")[7]);
+                    out.writeObject(1);
                 } else {
                     out.writeObject("no");
                 }
