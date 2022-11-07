@@ -9,11 +9,11 @@ package View;
 
 //-------- IMPORTS ------------------------------------------------------------
 //-------- PAQUETES -----------------------------------------------------------
+import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 //-------- CLASES -------------------------------------------------------------
 import Model.*;
+import Controller.*;
 
 public class menuPrincipal extends JFrame {
 
@@ -34,9 +35,14 @@ public class menuPrincipal extends JFrame {
 	private static ArrayList<JLabel> listLabels = new ArrayList<>();
 	private static ArrayList<JButton> listButtons = new ArrayList<>();
 	private static ArrayList<JMenuItem> listMenuItem = new ArrayList<>();
+	// ----------- Help ---------------------------------------------------------
 	// ----------- Otros --------------------------------------------------------
 	String msgAvisoCierre = "¿Estas seguro de que deseas cerrar el programa?";
 	String titleAvisoCierre = "EL PROGRAMA SE VA A CERRAR";
+	URL defaultProp = getClass().getResource("/data/language/default.properties");
+
+	public static Locale language;
+	private static Properties properties = new Properties();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -251,6 +257,14 @@ public class menuPrincipal extends JFrame {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				setCursor(waitCursor);
+				try {
+					// ------------------- TRADUCCION --------------------------------------
+					properties.load(defaultProp.openStream());
+					String locLang = String.valueOf(properties.getProperty("LANG"));
+					traducirPrograma(locLang, mnItGetHelp);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 				setCursor(defaultCursor);
 			} // END windowOpened
 
@@ -267,10 +281,12 @@ public class menuPrincipal extends JFrame {
 		});
 		mnItSpanish.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				traducirPrograma("es_ES", mnItGetHelp);
 			} // END mnItSpanish
 		});
 		mnItGalician.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				traducirPrograma("gl_ES", mnItGetHelp);
 			} // END mnItGalician
 		});
 		cmbComics.addItemListener(new ItemListener() {
@@ -327,5 +343,29 @@ public class menuPrincipal extends JFrame {
 			System.exit(0);
 		} // if
 	}
+	/**
+	 * Este metodo traduce el programa dependiendo del idioma recibido
+	 * 
+	 * @param idioma      Idioma al cual se va a traducir el programa
+	 * @param mnItGetHelp Botón del menú que abre la ayuda, a parte de el F1
+	 */
+	private void traducirPrograma(String idioma, JMenuItem mnItGetHelp) {
+		try {
+			properties.load(defaultProp.openStream());
+			properties.setProperty("LANG", String.valueOf(idioma));
+			FileOutputStream osFile = new FileOutputStream(new File(defaultProp.getPath()));
+			defaultProp.openStream().transferTo(osFile);
+			properties.store(osFile, null);
+			osFile.close();
+
+			properties.load(defaultProp.openStream());
+			Locale.setDefault(Locale.of(idioma));
+
+			gestionarIdioma.traducirBotones(listButtons);
+			gestionarIdioma.traducirMenu(listMenu, listMenuItem);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} // try/catch
+	}// END traducirPrograma(idioma)
 
 } // END menuPrincipal class
