@@ -11,10 +11,13 @@ package View;
 //-------- PAQUETES -----------------------------------------------------------
 import java.io.*;
 import java.net.URL;
+import java.sql.Blob;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import javax.help.*;
+import javax.imageio.ImageIO;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -48,7 +51,7 @@ public class menuPrincipal extends JFrame {
 	public static Locale language;
 	private static Properties properties = new Properties();
 
-	public static void main(String[] args) {
+	public static void iniciar() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -266,6 +269,15 @@ public class menuPrincipal extends JFrame {
 					properties.load(defaultProp.openStream());
 					String locLang = String.valueOf(properties.getProperty("LANG"));
 					traducirPrograma(locLang, mnItGetHelp);
+					// ------------------- LISTADO -----------------------------------------
+					listarComics(
+							cmbComics,
+							lblFecha,
+							lblPortada,
+							lblStock,
+							lblPrecio,
+							lblColeccion,
+							lblEstado);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -296,17 +308,41 @@ public class menuPrincipal extends JFrame {
 		cmbComics.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setCursor(waitCursor);
+				if (cmbComics.getItemCount() > 0) {
+					Comics c = (Comics) cmbComics.getSelectedItem();
+					seleccionarComic(
+							c,
+							lblFecha,
+							lblStock,
+							lblPrecio,
+							lblEstado);
+					seleccionarPortada(c, lblPortada);
+					seleccionarColeccion(c, lblColeccion);
+				}
 				setCursor(defaultCursor);
 			}
 		});
 		btnReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setCursor(waitCursor);
+				listarComics(
+						cmbComics,
+						lblFecha,
+						lblPortada,
+						lblStock,
+						lblPrecio,
+						lblColeccion,
+						lblEstado);
 				setCursor(defaultCursor);
 			}// END btnReload
 		});
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Comics c = (Comics) cmbComics.getSelectedItem();
+				gestionarConexion.conectar();
+				gestionarSockets.gestCom.removeComic(c);
+				gestionarConexion.cerrarConexion();
+				cmbComics.removeItemAt(cmbComics.getSelectedIndex());
 			} // END btnEliminar
 		});
 		btnModificar.addActionListener(new ActionListener() {
@@ -346,6 +382,94 @@ public class menuPrincipal extends JFrame {
 		if (opcion == JOptionPane.YES_OPTION) {
 			System.exit(0);
 		} // if
+	}
+
+	/**
+	 * 
+	 * @param img        El blob de la BD que contiene el icono a convertir
+	 * 
+	 * @param lblPortada La etiqueta que muestra la imagen
+	 * 
+	 * @return Devuelve la imagen como icono para las etiquetas
+	 */
+
+	private ImageIcon blobToImgIcon(Blob img, JLabel lblPortada) {
+		ImageIcon imageIcon = null;
+		try {
+			int blobLength = (int) img.length();
+			byte[] blobAsBytes = img.getBytes(1, blobLength);
+			final BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(blobAsBytes));
+			imageIcon = new ImageIcon(bufferedImage);
+			Image image = imageIcon.getImage();
+			Image newimg = image.getScaledInstance(lblPortada.getWidth(),
+					lblPortada.getHeight(),
+					java.awt.Image.SCALE_SMOOTH);
+			imageIcon = new ImageIcon(newimg);
+		} catch (Exception ex2) {
+			ex2.printStackTrace();
+		} // try/catch
+		return imageIcon;
+	} // END blobToImgIcon(img,lblPortada)
+
+	private void listarComics(
+			JComboBox<Comics> cmbComics,
+			JLabel lblFecha,
+			JLabel lblPortada,
+			JLabel lblStock,
+			JLabel lblPrecio,
+			JLabel lblColeccion,
+			JLabel lblEstado) {
+
+		gestionarConexion.conectar();
+		ArrayList<Comics> listaComics = gestionarSockets.gestCom.listarComics();
+		gestionarConexion.cerrarConexion();
+
+		cmbComics.removeAllItems();
+		for (Comics c : listaComics) {
+			cmbComics.addItem(c);
+		} // for
+
+		Comics c = (Comics) cmbComics.getSelectedItem();
+		seleccionarComic(
+				c,
+				lblFecha,
+				lblStock,
+				lblPrecio,
+				lblEstado);
+		seleccionarPortada(c, lblPortada);
+		seleccionarColeccion(c, lblColeccion);
+	} // END listarComics(cmbComics)
+
+	private void seleccionarComic(
+			Comics c,
+			JLabel lblFecha,
+			JLabel lblStock,
+			JLabel lblPrecio,
+			JLabel lblEstado) {
+
+		lblFecha.setText(c.getFecha() + "");
+		lblStock.setText(c.getCantidad() + " unidades");
+		lblEstado.setText(c.getEstado());
+		lblPrecio.setText(c.getPrecio() + "€");
+	}
+
+	private void seleccionarPortada(
+			Comics c,
+			JLabel lblPortada) {
+
+		Blob blob = c.getImagen();
+		ImageIcon imageIcon = blobToImgIcon(blob, lblPortada);
+
+		lblPortada.setIcon(imageIcon);
+
+		lblPortada.setIcon(imageIcon);
+	}
+
+	private void seleccionarColeccion(Comics c, JLabel lblColeccion) {
+		gestionarConexion.conectar();
+		Colecciones col = gestionarSockets.gestCol.obtenerColeccion(c);
+		gestionarConexion.cerrarConexion();
+		lblColeccion.setText(col.getTitulo());
 	}
 
 	/**
