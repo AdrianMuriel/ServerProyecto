@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.help.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -36,6 +37,9 @@ public class menuPrincipal extends JFrame {
 	private static ArrayList<JButton> listButtons = new ArrayList<>();
 	private static ArrayList<JMenuItem> listMenuItem = new ArrayList<>();
 	// ----------- Help ---------------------------------------------------------
+	private HelpSet hlpSet;
+	private HelpBroker hlpBroker;
+	private static URL helpURL;
 	// ----------- Otros --------------------------------------------------------
 	String msgAvisoCierre = "¿Estas seguro de que deseas cerrar el programa?";
 	String titleAvisoCierre = "EL PROGRAMA SE VA A CERRAR";
@@ -343,6 +347,7 @@ public class menuPrincipal extends JFrame {
 			System.exit(0);
 		} // if
 	}
+
 	/**
 	 * Este metodo traduce el programa dependiendo del idioma recibido
 	 * 
@@ -359,11 +364,26 @@ public class menuPrincipal extends JFrame {
 			osFile.close();
 
 			properties.load(defaultProp.openStream());
+			String lang[] = String.valueOf(properties.getProperty("LANG")).split("_");
 			Locale.setDefault(Locale.of(idioma));
+
+			switch (lang[0]) {
+				case "es":
+					helpURL = this.getClass().getResource("/data/help/help.hs");
+					break;
+				case "gl":
+					helpURL = this.getClass().getResource("/data/help/help_gl_ES.hs");
+					break;
+			} // switch
+
+			hlpSet = new HelpSet(null, helpURL);
+			hlpBroker = hlpSet.createHelpBroker();
+			hlpBroker.enableHelpOnButton(mnItGetHelp, "principal", hlpSet);
+			hlpBroker.enableHelpKey(getContentPane(), "principal", hlpSet);
 
 			gestionarIdioma.traducirBotones(listButtons);
 			gestionarIdioma.traducirMenu(listMenu, listMenuItem);
-		} catch (IOException e1) {
+		} catch (IOException | HelpSetException e1) {
 			e1.printStackTrace();
 		} // try/catch
 	}// END traducirPrograma(idioma)
