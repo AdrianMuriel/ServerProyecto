@@ -37,7 +37,6 @@ public class ComicsDao {
             }
 
             sentencia.close();
-            con.close();
             return listaComics;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -57,8 +56,13 @@ public class ComicsDao {
             gestionarConexion.getConexion().commit();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al modificar el Cómic");
+            try {
+                ex.printStackTrace();
+                gestionarConexion.getConexion().rollback();
+                JOptionPane.showMessageDialog(null, "Error al modificar el Cómic");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

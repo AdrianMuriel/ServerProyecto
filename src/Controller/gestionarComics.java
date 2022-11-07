@@ -28,11 +28,14 @@ public class gestionarComics {
         }
     }
 
-    public void removeComic(Comics c) {
+    public int removeComic(Comics c) {
         try {
             out.writeObject("EliminarComic-" + c.getTitulo() + "-" + c.getNum_col());
+            int result = (int) in.readObject();
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
     }
 

@@ -38,6 +38,7 @@ public class gestionarConsultas extends Thread {
                 } else if (comando.split("-")[0].equalsIgnoreCase("EliminarComic")) {
                     ComicsDao comDao = new ComicsDao();
                     comDao.removeComic(comando.split("-")[1], Integer.valueOf(comando.split("-")[2]));
+                    out.writeObject(1);
                 } else {
                     out.writeObject("no");
                 }

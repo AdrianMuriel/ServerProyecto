@@ -25,6 +25,7 @@ public class gestionarSockets {
             in = new ObjectInputStream(socket.getInputStream());
 
             gestCom = new gestionarComics(in, out);
+            gestCol = new gestionarColecciones(in, out);
             menuPrincipal frame = new menuPrincipal();
             frame.setVisible(true);
 

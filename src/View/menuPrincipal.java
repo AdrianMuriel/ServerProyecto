@@ -338,11 +338,15 @@ public class menuPrincipal extends JFrame {
 		});
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setCursor(waitCursor);
 				Comics c = (Comics) cmbComics.getSelectedItem();
 				gestionarConexion.conectar();
-				gestionarSockets.gestCom.removeComic(c);
-				gestionarConexion.cerrarConexion();
+				int result = gestionarSockets.gestCom.removeComic(c);
+				if (result > 0) {
+					gestionarConexion.cerrarConexion();
+				}
 				cmbComics.removeItemAt(cmbComics.getSelectedIndex());
+				setCursor(defaultCursor);
 			} // END btnEliminar
 		});
 		btnModificar.addActionListener(new ActionListener() {
