@@ -107,19 +107,17 @@ public class menuPrincipal extends JFrame {
 					groupLayout.createParallelGroup(Alignment.LEADING)
 							.addGroup(groupLayout.createSequentialGroup()
 									.addContainerGap()
-									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-											.addComponent(btnModificar, GroupLayout.PREFERRED_SIZE, 198,
-													GroupLayout.PREFERRED_SIZE)
-											.addComponent(lblEstado, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 207,
-													Short.MAX_VALUE)
-											.addComponent(lblPrecio, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 207,
-													Short.MAX_VALUE)
-											.addComponent(lblStock, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 207,
-													Short.MAX_VALUE)
-											.addComponent(lblColeccion, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-													207, Short.MAX_VALUE)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addGroup(groupLayout.createSequentialGroup()
+													.addComponent(btnModificar, GroupLayout.DEFAULT_SIZE, 198,
+															Short.MAX_VALUE)
+													.addGap(9))
+											.addComponent(lblEstado, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+											.addComponent(lblPrecio, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+											.addComponent(lblStock, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+											.addComponent(lblColeccion, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
 											.addComponent(lblFecha, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-											.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+											.addGroup(groupLayout.createSequentialGroup()
 													.addComponent(cmbComics, GroupLayout.PREFERRED_SIZE, 166,
 															GroupLayout.PREFERRED_SIZE)
 													.addPreferredGap(ComponentPlacement.RELATED,
@@ -128,8 +126,8 @@ public class menuPrincipal extends JFrame {
 															GroupLayout.PREFERRED_SIZE)))
 									.addGap(18)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addComponent(lblPortada, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-											.addComponent(btnEliminar, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+											.addComponent(lblPortada, GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+											.addComponent(btnEliminar, GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
 									.addContainerGap()));
 			groupLayout.setVerticalGroup(
 					groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -139,7 +137,9 @@ public class menuPrincipal extends JFrame {
 											.addGroup(groupLayout.createSequentialGroup()
 													.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 															.addComponent(btnReload, 0, 0, Short.MAX_VALUE)
-															.addComponent(cmbComics))
+															.addComponent(cmbComics, GroupLayout.PREFERRED_SIZE,
+																	GroupLayout.DEFAULT_SIZE,
+																	GroupLayout.PREFERRED_SIZE))
 													.addGap(18)
 													.addComponent(lblFecha)
 													.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -150,7 +150,7 @@ public class menuPrincipal extends JFrame {
 													.addComponent(lblPrecio)
 													.addPreferredGap(ComponentPlacement.UNRELATED)
 													.addComponent(lblEstado))
-											.addComponent(lblPortada, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+											.addComponent(lblPortada, GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 											.addComponent(btnModificar)
@@ -351,19 +351,10 @@ public class menuPrincipal extends JFrame {
 		});
 		mnItBuscarComic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setCursor(waitCursor);
-				String titulo = JOptionPane.showInputDialog(null, "Como se llama el cómic?", "Comic Ejemplo 2");
-				if (titulo.length() > 0) {
-					gestionarConexion.conectar();
-					Comics c = gestionarSockets.gestCom.searchComic(titulo);
-					gestionarConexion.cerrarConexion();
-					if (c != null) {
-						menuComics.iniciar(c, "Modificar Comic");
-					} else {
-						JOptionPane.showMessageDialog(null, "No existe el comic " + titulo, "ERROR", 0);
-					}
-				}
-				setCursor(defaultCursor);
+				gestionarConexion.conectar();
+				ArrayList<Colecciones> listaColecciones = gestionarSockets.gestCol.listarColecciones();
+				gestionarConexion.cerrarConexion();
+				menuReportes.iniciar(listaColecciones);
 			} // END mnItBuscarComic
 		});
 		mnItNuevoComic.addActionListener(new ActionListener() {

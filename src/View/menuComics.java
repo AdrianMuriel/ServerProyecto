@@ -337,7 +337,7 @@ public class menuComics extends JDialog {
                     }
                     helpset = new HelpSet(null, helpURL);
                     browser = helpset.createHelpBroker();
-                    browser.enableHelpKey(getContentPane(), "ver_datos", helpset);
+                    browser.enableHelpKey(getContentPane(), "crear_modificar", helpset);
                 } catch (HelpSetException | IOException ex1) {
                     ex1.printStackTrace();
                 }
@@ -417,6 +417,7 @@ public class menuComics extends JDialog {
                 try {
                     String userDir = System.getProperty("user.home");
                     JFileChooser fChser = new JFileChooser(userDir + "/Desktop");
+                    fChser.setAcceptAllFileFilterUsed(false);
                     fChser.setFileFilter(pngFilter);
                     fChser.setFileFilter(jpgFilter);
                     fChser.setFileFilter(jpegFilter);
@@ -451,37 +452,55 @@ public class menuComics extends JDialog {
                     JOptionPane.showMessageDialog(null, "No has seleccionado una portada", "ERROR",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
-                    setCursor(waitCursor);
-
-                    comic.setTitulo(txtTitulo.getText());
-                    comic.setCantidad((int) spCantidad.getValue());
-                    comic.setPrecio((Float) spPrecio.getValue());
-                    comic.setEstado(cmbEstado.getSelectedItem().toString());
-                    java.util.Date fechaU = (java.util.Date) spFecha.getValue();
-                    java.sql.Date fechaS = new java.sql.Date(fechaU.getTime());
-                    comic.setFecha(fechaS);
-                    Colecciones col = (Colecciones) cmbColeccion.getSelectedItem();
-                    comic.setNum_col(col.getNum_coleccion());
-                    try {
+                    if (txtTitulo.getText().contains("··")) {
+                        JOptionPane.showMessageDialog(null,
+                                "No puedes utilizar [··] en el titulo",
+                                "ERROR",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
                         gestionarConexion.conectar();
-                        if (titulo == "Crear Cómic") {
-                            gestionarSockets.gestCom.addComic(comic, imgPath);
-                        } else {
-                            gestionarSockets.gestCom.updateComic(comic, imgPath);
-                        }
-                        gestionarConexion.getConexion().commit();
-
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        try {
-                            gestionarConexion.getConexion().rollback();
-                        } catch (SQLException e1) {
-                            e1.printStackTrace();
-                        }
-                    } finally {
-                        setCursor(defaultCursor);
+                        System.out.println(txtTitulo.getText());
+                        boolean existe = gestionarSockets.gestCom.getComic(txtTitulo.getText());
                         gestionarConexion.cerrarConexion();
-                        dispose();
+                        if (existe) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Ya existe un comic con el titulo " + txtTitulo.getText(),
+                                    "ERROR",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            setCursor(waitCursor);
+
+                            comic.setTitulo(txtTitulo.getText());
+                            comic.setCantidad((int) spCantidad.getValue());
+                            comic.setPrecio((Float) spPrecio.getValue());
+                            comic.setEstado(cmbEstado.getSelectedItem().toString());
+                            java.util.Date fechaU = (java.util.Date) spFecha.getValue();
+                            java.sql.Date fechaS = new java.sql.Date(fechaU.getTime());
+                            comic.setFecha(fechaS);
+                            Colecciones col = (Colecciones) cmbColeccion.getSelectedItem();
+                            comic.setNum_col(col.getNum_coleccion());
+                            try {
+                                gestionarConexion.conectar();
+                                if (titulo == "Crear Cómic") {
+                                    gestionarSockets.gestCom.addComic(comic, imgPath);
+                                } else {
+                                    gestionarSockets.gestCom.updateComic(comic, imgPath);
+                                }
+                                gestionarConexion.getConexion().commit();
+
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                                try {
+                                    gestionarConexion.getConexion().rollback();
+                                } catch (SQLException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } finally {
+                                setCursor(defaultCursor);
+                                gestionarConexion.cerrarConexion();
+                                dispose();
+                            }
+                        }
                     }
                 }
             }
@@ -548,7 +567,7 @@ public class menuComics extends JDialog {
             }
             helpset = new HelpSet(null, helpURL);
             browser = helpset.createHelpBroker();
-            browser.enableHelpKey(getContentPane(), "ver_datos", helpset);
+            browser.enableHelpKey(getContentPane(), "crear_modificar", helpset);
 
             gestionarIdioma.traducirBotones(listButtons);
             gestionarIdioma.traducirEtiquetas(listLabels);

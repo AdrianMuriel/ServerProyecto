@@ -1,12 +1,12 @@
 package Model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -39,6 +39,30 @@ public class ComicsDao {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al listar los Cómics");
             return null;
+        }
+    }
+
+    public int getComic(String titulo) {
+        Comics c = null;
+        try {
+            String consulta = "SELECT * FROM comics WHERE titulo = ?";
+            PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
+            sentencia.setString(1, titulo);
+            ResultSet res = sentencia.executeQuery(consulta);
+            if (res.next()) {
+                c = new Comics(res.getInt(1), res.getString(2), res.getBlob(3),
+                        res.getDate(4), res.getInt(5),
+                        res.getFloat(6), res.getString(7));
+            }
+            res.close();
+
+            sentencia.close();
+            System.out.println(c + " ComicsDao");
+            return 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al comprobar el Cómics");
+            return 0;
         }
     }
 

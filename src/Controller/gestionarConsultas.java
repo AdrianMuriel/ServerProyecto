@@ -37,13 +37,18 @@ public class gestionarConsultas extends Thread {
                     ColeccionesDao colDao = new ColeccionesDao();
                     ArrayList<Colecciones> listaColecciones = colDao.getListaColecciones();
                     out.writeObject(listaColecciones);
+                } else if (comando.equalsIgnoreCase("ObtenerComic")) {
+                    ComicsDao comDao = new ComicsDao();
+                    System.out.println(comando.split("··")[1]+" gestionarConsultas");
+                    int existe = comDao.getComic(comando.split("··")[1]);
+                    out.writeObject(existe);
                 } else if (comando.split("··")[0].equalsIgnoreCase("ObtenerColeccion")) {
                     ColeccionesDao colDao = new ColeccionesDao();
                     Colecciones col = colDao.getColeccion(Integer.valueOf(comando.split("··")[1]));
                     out.writeObject(col);
                 } else if (comando.split("··")[0].equalsIgnoreCase("EliminarComic")) {
                     ComicsDao comDao = new ComicsDao();
-                    comDao.removeComic(comando.split("··")[1], Integer.valueOf(comando.split("·")[2]));
+                    comDao.removeComic(comando.split("··")[1], Integer.valueOf(comando.split("··")[2]));
                     out.writeObject(1);
                 } else if (comando.split("··")[0].equalsIgnoreCase("BuscarComic")) {
                     ComicsDao comDao = new ComicsDao();

@@ -2,7 +2,7 @@
 <map version="2.0">
 	<mapID target="principal" url="html/es/principal.html" >
 	<mapID target="conexion" url="html/es/conexion.html" >
-	<mapID target="tabla_peliculas" url="html/es/tabla_peliculas.html" >
-	<mapID target="ver_datos" url="html/es/modificar.html" >
+	<mapID target="reportes" url="html/es/reportes.html" >
+	<mapID target="crear_modificar" url="html/es/crear_modificar.html" >
 	</mapID>
 </map>

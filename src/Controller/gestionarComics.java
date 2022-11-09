@@ -4,7 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import Model.*;
+import Model.Comics;
 
 public class gestionarComics {
 
@@ -25,6 +25,18 @@ public class gestionarComics {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public boolean getComic(String titulo) {
+        try {
+            out.writeObject("ObtenerComic··" + titulo);
+            int existe = (int) in.readObject();
+            System.out.println(existe + " gestionarComics");
+            return (existe > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
         }
     }
 
