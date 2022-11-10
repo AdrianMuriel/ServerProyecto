@@ -32,7 +32,6 @@ public class gestionarComics {
         try {
             out.writeObject("ObtenerComic··" + titulo);
             int existe = (int) in.readObject();
-            System.out.println(existe + " gestionarComics");
             return (existe > 0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +59,24 @@ public class gestionarComics {
                             c.getPrecio() + "··" +
                             c.getCantidad() + "··" +
                             imgPath + "··" +
+                            c.getFecha() + "··" +
+                            c.getEstado());
+            int result = (int) in.readObject();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int updateComicNoImage(Comics c) {
+        try {
+            out.writeObject(
+                    "ModificarComicNoImage··" +
+                            c.getTitulo() + "··" +
+                            c.getNum_col() + "··" +
+                            c.getPrecio() + "··" +
+                            c.getCantidad() + "··" +
                             c.getFecha() + "··" +
                             c.getEstado());
             int result = (int) in.readObject();

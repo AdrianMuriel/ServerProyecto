@@ -48,7 +48,7 @@ public class ComicsDao {
             String consulta = "SELECT * FROM comics WHERE titulo = ?";
             PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
             sentencia.setString(1, titulo);
-            ResultSet res = sentencia.executeQuery(consulta);
+            ResultSet res = sentencia.executeQuery();
             if (res.next()) {
                 c = new Comics(res.getInt(1), res.getString(2), res.getBlob(3),
                         res.getDate(4), res.getInt(5),
@@ -57,8 +57,12 @@ public class ComicsDao {
             res.close();
 
             sentencia.close();
-            System.out.println(c + " ComicsDao");
-            return 1;
+            
+            if(c == null){
+                return 0;
+            }else{
+                return 1;
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al comprobar el Cómics");
@@ -123,7 +127,38 @@ public class ComicsDao {
             try {
                 ex.printStackTrace();
                 gestionarConexion.getConexion().rollback();
-                JOptionPane.showMessageDialog(null, "Error al insertar el Cómic");
+                JOptionPane.showMessageDialog(null, "Error al modificar el Cómic");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateComicNoImage(
+            String titulo,
+            int num_coleccion,
+            float precio,
+            int cantidad,
+            Date fecha,
+            String estado) {
+        try {
+            String consulta = "UPDATE comics SET fechaAdquisicion = ?,cantidadStock = ?,precio = ?,estado = ? WHERE num_coleccion = ? AND titulo = ?";
+            PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
+            sentencia.setDate(1, fecha);
+            sentencia.setInt(2, cantidad);
+            sentencia.setFloat(3, precio);
+            sentencia.setString(4, estado);
+            sentencia.setInt(5, num_coleccion);
+            sentencia.setString(6, titulo);
+            sentencia.executeUpdate();
+
+            gestionarConexion.getConexion().commit();
+
+        } catch (SQLException ex) {
+            try {
+                ex.printStackTrace();
+                gestionarConexion.getConexion().rollback();
+                JOptionPane.showMessageDialog(null, "Error al modificar el Cómic");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

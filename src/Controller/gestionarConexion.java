@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 public class gestionarConexion {
     private static Connection con;
     private static File conFile = new File(
-            gestionarConexion.class.getResource("/data/connection/connection.properties").getPath());
+            gestionarConexion.class.getResource("/connection.properties").getPath());
     private static Properties properties = new Properties();
 
     /**
@@ -19,6 +19,7 @@ public class gestionarConexion {
      */
     public static void conectar() {
         try {
+            System.out.println(conFile.getCanonicalPath());
             properties.load(new FileInputStream(conFile));
             Class.forName("com.mysql.jdbc.Driver");
             String url = "jdbc:mysql://" + properties.get("IP") + ":" + properties.get("PORT") + "/"

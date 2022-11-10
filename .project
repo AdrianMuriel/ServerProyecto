@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>MurielZamoraAdrian_ProyectoDAM</name>
+	<name>Servidor_Proyecto</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -14,9 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>resources</name>
+			<type>2</type>
+			<location>D:/Proyectos/VisualStudio_Code/Servidor_Proyecto/assets</location>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1667816726439</id>
+			<id>1668007736013</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

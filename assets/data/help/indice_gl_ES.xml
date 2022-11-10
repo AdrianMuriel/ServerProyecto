@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding="UTF-8" ?>
-<index version="1.0">
-	<indexitem text="Menu Principal" target="principal">
-		<indexitem text="Informes dos Comics" target="reportes"/>
-		<indexitem text="Crear ou Modificar Comic" target="crear_modificar"/>
-		<indexitem text="Configuracion da Conexion" target="conexion"/>
-	</indexitem>
-</index>
