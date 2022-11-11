@@ -42,10 +42,10 @@ public class gestionarReportes {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("nombre", name);
             JasperReport report = JasperCompileManager
-                    .compileReport(repPath.getCanonicalPath() + "/libreria_coleccion.jrxml");
+                    .compileReport(repPath.getCanonicalPath() + "/libreria_nombre.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, map, con);
             JasperExportManager.exportReportToPdfFile(jasperPrint,
-                    repPath.getCanonicalPath() + "/libreria_coleccion.pdf");
+                    repPath.getCanonicalPath() + "/libreria_nombre.pdf");
 
             JasperViewer.viewReport(jasperPrint, false);
         } catch (JRException | IOException e1) {

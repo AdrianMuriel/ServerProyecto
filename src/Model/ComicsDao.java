@@ -1,14 +1,18 @@
 package Model;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.sql.rowset.serial.SerialBlob;
 import javax.swing.JOptionPane;
 
 import Controller.gestionarConexion;
@@ -57,10 +61,10 @@ public class ComicsDao {
             res.close();
 
             sentencia.close();
-            
-            if(c == null){
+
+            if (c == null) {
                 return 0;
-            }else{
+            } else {
                 return 1;
             }
         } catch (SQLException ex) {
@@ -75,27 +79,32 @@ public class ComicsDao {
             int num_coleccion,
             float precio,
             int cantidad,
-            FileInputStream img,
-            File portada,
             Date fecha,
-            String estado) {
+            String estado,
+            File img) {
         try {
-            String consulta = "INSERT INTO comics(num_coleccion,titulo,portada,fechaAdquisicion,cantidadStock,precio,estado) VALUES(?,?,?,?,?,?,?)";
+            byte[] byteBlob = Files.readAllBytes(img.toPath());
+            Blob imgB = new SerialBlob(byteBlob);
+
+            String consulta = "INSERT INTO comics(num_coleccion, titulo, portada, fechaAdquisicion, cantidadStock, precio, estado) VALUES(?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
             sentencia.setInt(1, num_coleccion);
             sentencia.setString(2, titulo);
-            sentencia.setBinaryStream(3, img, (int) portada.length());
+            sentencia.setBlob(3, imgB);
             sentencia.setDate(4, fecha);
             sentencia.setInt(5, cantidad);
             sentencia.setFloat(6, precio);
             sentencia.setString(7, estado);
             sentencia.executeUpdate();
-
-            img.close();
-
-        } catch (SQLException | IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al insertar el Cómic");
+            gestionarConexion.getConexion().commit();
+        } catch (Exception ex) {
+            try {
+                gestionarConexion.getConexion().rollback();
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al insertar el Cómic");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -104,14 +113,16 @@ public class ComicsDao {
             int num_coleccion,
             float precio,
             int cantidad,
-            FileInputStream img,
-            File portada,
+            File img,
             Date fecha,
             String estado) {
         try {
+            byte[] byteBlob = Files.readAllBytes(img.toPath());
+            Blob imgB = new SerialBlob(byteBlob);
+
             String consulta = "UPDATE comics SET portada = ?,fechaAdquisicion = ?,cantidadStock = ?,precio = ?,estado = ? WHERE num_coleccion = ? AND titulo = ?";
             PreparedStatement sentencia = gestionarConexion.getConexion().prepareStatement(consulta);
-            sentencia.setBinaryStream(1, img, (int) portada.length());
+            sentencia.setBlob(1, imgB);
             sentencia.setDate(2, fecha);
             sentencia.setInt(3, cantidad);
             sentencia.setFloat(4, precio);
@@ -120,7 +131,6 @@ public class ComicsDao {
             sentencia.setString(7, titulo);
             sentencia.executeUpdate();
 
-            img.close();
             gestionarConexion.getConexion().commit();
 
         } catch (SQLException | IOException ex) {
@@ -206,5 +216,32 @@ public class ComicsDao {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static byte[] convertFileContentToBlob(String filePath) throws IOException {
+        byte[] fileContent = null;
+
+        StringBuffer fileContentStr = new StringBuffer("");
+        BufferedReader reader = null;
+        try {
+            // initialize buffered reader
+            reader = new BufferedReader(new FileReader(filePath));
+            String line = null;
+            // read lines of file
+            while ((line = reader.readLine()) != null) {
+                // append line to string buffer
+                fileContentStr.append(line).append("\n");
+            }
+            // convert string to byte array
+            fileContent = fileContentStr.toString().trim().getBytes();
+        } catch (IOException e) {
+            throw new IOException("Unable to convert file to byte array. " +
+                    e.getMessage());
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return fileContent;
     }
 }

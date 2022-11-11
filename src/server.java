@@ -19,6 +19,7 @@ public class server extends Thread {
             while (true) {
                 Socket cliente = servidor.accept();
                 System.out.println("CLIENTE ACEPTADO");
+
                 ObjectInputStream in = new ObjectInputStream(cliente.getInputStream());
                 ObjectOutputStream out = new ObjectOutputStream(cliente.getOutputStream());
                 gestionarConsultas serv = new gestionarConsultas(in, out);

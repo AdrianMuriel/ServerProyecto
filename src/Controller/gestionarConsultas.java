@@ -1,7 +1,7 @@
 package Controller;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 //········ PAQUETES ···························································
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,8 +30,12 @@ public class gestionarConsultas extends Thread {
         try {
             comando = (String) in.readObject();
             while (!comando.equalsIgnoreCase("fin")) {
-                File img;
-                FileInputStream fis;
+                int bytes = 0;
+                byte[] buffer = new byte[4 * 1024];
+                File file = new File("imagen.jpg");
+                FileOutputStream fos = new FileOutputStream("imagen.jpg");
+                long size;
+
                 String accion = comando.split("··")[0];
 
                 ComicsDao comDao = new ComicsDao();
@@ -79,31 +83,55 @@ public class gestionarConsultas extends Thread {
                         out.writeObject(c);
                         break;
                     case "InsertarComic":
-                        img = new File(comando.split("··")[5]);
-                        fis = new FileInputStream(img);
+                        if (file.exists()) {
+                            file.delete();
+                        }
+
+                        size = in.readLong();
+                        while (size > 0
+                                && (bytes = in.read(
+                                        buffer, 0,
+                                        (int) Math.min(buffer.length, size))) != -1) {
+                            fos.write(buffer, 0, bytes);
+                            size -= bytes;
+                        }
+                        fos.close();
+
                         comDao.addComic(
                                 comando.split("··")[1],
                                 Integer.valueOf(comando.split("··")[2]),
                                 Float.valueOf(comando.split("··")[3]),
                                 Integer.valueOf(comando.split("··")[4]),
-                                fis,
-                                img,
-                                java.sql.Date.valueOf(comando.split("··")[6]),
-                                comando.split("··")[7]);
+                                java.sql.Date.valueOf(comando.split("··")[5]),
+                                comando.split("··")[6],
+                                file);
+
                         out.writeObject(1);
+
                         break;
                     case "ModificarComic":
-                        img = new File(comando.split("··")[5]);
-                        fis = new FileInputStream(img);
+                        if (file.exists()) {
+                            file.delete();
+                        }
+
+                        size = in.readLong();
+                        while (size > 0
+                                && (bytes = in.read(
+                                        buffer, 0,
+                                        (int) Math.min(buffer.length, size))) != -1) {
+                            fos.write(buffer, 0, bytes);
+                            size -= bytes;
+                        }
+                        fos.close();
                         comDao.updateComic(
                                 comando.split("··")[1],
                                 Integer.valueOf(comando.split("··")[2]),
                                 Float.valueOf(comando.split("··")[3]),
                                 Integer.valueOf(comando.split("··")[4]),
-                                fis,
-                                img,
-                                java.sql.Date.valueOf(comando.split("··")[6]),
-                                comando.split("··")[7]);
+                                file,
+                                java.sql.Date.valueOf(comando.split("··")[5]),
+                                comando.split("··")[6]);
+
                         out.writeObject(1);
                         break;
                     case "ModificarComicNoImage":
@@ -122,7 +150,9 @@ public class gestionarConsultas extends Thread {
                 }
                 comando = (String) in.readObject();
             }
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             e.printStackTrace();
         }
         try {
@@ -133,5 +163,4 @@ public class gestionarConsultas extends Thread {
         }
 
     }
-
 }
