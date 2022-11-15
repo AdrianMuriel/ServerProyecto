@@ -83,6 +83,7 @@ public class ComicsDao {
             String estado,
             File img) {
         try {
+            System.out.println(img.toPath());
             byte[] byteBlob = Files.readAllBytes(img.toPath());
             Blob imgB = new SerialBlob(byteBlob);
 

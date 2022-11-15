@@ -10,8 +10,7 @@ import javax.swing.JOptionPane;
 
 public class gestionarConexion {
     private static Connection con;
-    private static File conFile = new File(
-            gestionarConexion.class.getResource("/connection.properties").getPath());
+    private static InputStream is = gestionarConexion.class.getResourceAsStream("/connection.properties");
     private static Properties properties = new Properties();
 
     /**
@@ -19,8 +18,7 @@ public class gestionarConexion {
      */
     public static void conectar() {
         try {
-            System.out.println(conFile.getCanonicalPath());
-            properties.load(new FileInputStream(conFile));
+            properties.load(is);
             Class.forName("com.mysql.jdbc.Driver");
             String url = "jdbc:mysql://" + properties.get("IP") + ":" + properties.get("PORT") + "/"
                     + properties.get("BD");
@@ -36,12 +34,12 @@ public class gestionarConexion {
             System.exit(0);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "No se encuentra el fichero properties", "ERROR", 0);
-            System.exit(0);
             e.printStackTrace();
+            System.exit(0);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al leer el fichero properties", "ERROR", 0);
-            System.exit(0);
             e.printStackTrace();
+            System.exit(0);
         }
     }
 
@@ -67,15 +65,16 @@ public class gestionarConexion {
      * 
      * @param datos
      */
-    public static void cambiarProperties(String[] datos, String pwd) {
+    public static void cambiarProperties(String[] datos) {
         try {
-            properties.load(new FileInputStream(conFile));
+            properties.load(is);
             properties.setProperty("IP", datos[0]);
             properties.setProperty("PORT", datos[1]);
             properties.setProperty("BD", datos[2]);
             properties.setProperty("USER", datos[3]);
-            properties.setProperty("PASSWORD", pwd.toString());
-            FileOutputStream fileOS = new FileOutputStream(conFile);
+            properties.setProperty("PASSWORD", datos[4]);
+            FileOutputStream fileOS = new FileOutputStream("/connection.properties");
+            is.transferTo(fileOS);
             properties.store(fileOS, null);
             fileOS.close();
         } catch (FileNotFoundException e) {
@@ -95,7 +94,7 @@ public class gestionarConexion {
     public static String[] leerProperties() {
         String[] datos = new String[5];
         try {
-            properties.load(new FileInputStream(conFile));
+            properties.load(is);
             datos[0] = String.valueOf(properties.get("IP"));
             datos[1] = String.valueOf(properties.get("PORT"));
             datos[2] = String.valueOf(properties.get("BD"));

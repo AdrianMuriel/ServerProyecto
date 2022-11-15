@@ -79,7 +79,7 @@
 				<textField pattern="EEEEE dd MMMMM yyyy">
 					<reportElement x="553" y="12" width="144" height="20" forecolor="#FFFFFF" uuid="a33fce3b-20c1-4696-873a-fe134d1e7d88"/>
 					<textElement textAlignment="Right">
-						<font size="12"/>
+						<font fontName="Liberation Serif" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
@@ -96,7 +96,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1564ee86-65a6-47dd-b5ea-c6167957ae46"/>
 				</reportElement>
 				<textElement>
-					<font isBold="false"/>
+					<font fontName="Liberation Serif" isBold="false"/>
 				</textElement>
 				<text><![CDATA[fechaAdquisicion]]></text>
 			</staticText>
@@ -105,7 +105,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="585ba881-727a-404f-a000-4d3664551152"/>
 				</reportElement>
 				<textElement>
-					<font isBold="false"/>
+					<font fontName="Liberation Serif" isBold="false"/>
 				</textElement>
 				<text><![CDATA[cantidadStock]]></text>
 			</staticText>
@@ -114,7 +114,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a6cf5891-36ec-4319-b00e-24d5987026f1"/>
 				</reportElement>
 				<textElement>
-					<font isBold="false"/>
+					<font fontName="Liberation Serif" isBold="false"/>
 				</textElement>
 				<text><![CDATA[precio]]></text>
 			</staticText>
@@ -123,7 +123,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ff5567b4-c669-4bbd-abd6-a11189f81445"/>
 				</reportElement>
 				<textElement>
-					<font isBold="false"/>
+					<font fontName="Liberation Serif" isBold="false"/>
 				</textElement>
 				<text><![CDATA[estado]]></text>
 			</staticText>
@@ -138,7 +138,7 @@
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="483e8e58-ecad-49c2-bfa1-b318b303d096"/>
 					</reportElement>
 					<textElement>
-						<font size="45"/>
+						<font fontName="Liberation Serif" size="45"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{titulo}]]></textFieldExpression>
 				</textField>
@@ -147,7 +147,7 @@
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1564ee86-65a6-47dd-b5ea-c6167957ae46"/>
 					</reportElement>
 					<textElement>
-						<font size="14"/>
+						<font fontName="Liberation Serif" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fechaAdquisicion}]]></textFieldExpression>
 				</textField>
@@ -156,7 +156,7 @@
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="585ba881-727a-404f-a000-4d3664551152"/>
 					</reportElement>
 					<textElement>
-						<font size="14"/>
+						<font fontName="Liberation Serif" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{cantidadStock}]]></textFieldExpression>
 				</textField>
@@ -165,7 +165,7 @@
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a6cf5891-36ec-4319-b00e-24d5987026f1"/>
 					</reportElement>
 					<textElement>
-						<font size="14"/>
+						<font fontName="Liberation Serif" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
 				</textField>
@@ -174,7 +174,7 @@
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ff5567b4-c669-4bbd-abd6-a11189f81445"/>
 					</reportElement>
 					<textElement>
-						<font size="14"/>
+						<font fontName="Liberation Serif" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
 				</textField>
@@ -183,7 +183,7 @@
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="483e8e58-ecad-49c2-bfa1-b318b303d096"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font size="20"/>
+						<font fontName="Liberation Serif" size="20"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
 				</textField>
@@ -207,21 +207,21 @@
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="757" y="3" width="40" height="20" forecolor="#FFFFFF" uuid="b5521ea6-5f36-4864-856f-58d0bcd011f2"/>
 					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
+						<font fontName="Liberation Serif" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement style="Column header" x="677" y="3" width="80" height="20" forecolor="#FFFFFF" uuid="e625ea3c-1741-4cfe-81cf-fbbdd00162c8"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
+						<font fontName="Liberation Serif" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE dd MMMMM yyyy">
 					<reportElement style="Column header" x="2" y="3" width="197" height="20" forecolor="#FFFFFF" uuid="0c9f7e91-d3f5-47f9-82b7-0b2b3a43a5d6"/>
 					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
+						<font fontName="Liberation Serif" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>

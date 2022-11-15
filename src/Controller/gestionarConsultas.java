@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 //········ PAQUETES ···························································
 import java.io.ObjectInputStream;
@@ -26,14 +27,17 @@ public class gestionarConsultas extends Thread {
 
     @Override
     public void run() {
+        File pdf;
+        FileInputStream fis;
+        File repPath = new File("./reports");
         String comando;
         try {
             comando = (String) in.readObject();
             while (!comando.equalsIgnoreCase("fin")) {
                 int bytes = 0;
                 byte[] buffer = new byte[4 * 1024];
-                File file = new File("imagen.jpg");
-                FileOutputStream fos = new FileOutputStream("imagen.jpg");
+                File file;
+                FileOutputStream fos;
                 long size;
 
                 String accion = comando.split("··")[0];
@@ -51,12 +55,37 @@ public class gestionarConsultas extends Thread {
                         Connection con = gestionarConexion.getConexion();
                         out.writeObject(con);
                         break;
+                    case "getConData":
+                        String[] dataCon = gestionarConexion.leerProperties();
+                        out.writeObject(dataCon);
+                        break;
+                    case "SetConData":
+                        String[] conData = (String[]) in.readObject();
+                        gestionarConexion.cambiarProperties(conData);
+                        break;
                     case "informeColeccion":
-                        System.out.println(comando);
                         gestionarReportes.getColeccionReporte(comando.split("··")[1]);
+                        pdf = new File(repPath.getAbsolutePath() + "/libreria_coleccion.pdf");
+                        bytes = 0;
+                        fis = new FileInputStream(pdf);
+                        out.writeLong(pdf.length());
+                        buffer = new byte[4 * 1024];
+                        while ((bytes = fis.read(buffer)) != -1) {
+                            out.write(buffer, 0, bytes);
+                            out.flush();
+                        }
                         break;
                     case "informeNombre":
                         gestionarReportes.getNombreReporte(comando.split("··")[1]);
+                        pdf = new File(repPath.getAbsolutePath() + "/libreria_nombre.pdf");
+                        bytes = 0;
+                        fis = new FileInputStream(pdf);
+                        out.writeLong(pdf.length());
+                        buffer = new byte[4 * 1024];
+                        while ((bytes = fis.read(buffer)) != -1) {
+                            out.write(buffer, 0, bytes);
+                            out.flush();
+                        }
                         break;
                     case "ListaComics":
                         ArrayList<Comics> listaComics = comDao.getListaComics();
@@ -83,10 +112,10 @@ public class gestionarConsultas extends Thread {
                         out.writeObject(c);
                         break;
                     case "InsertarComic":
-                        if (file.exists()) {
-                            file.delete();
-                        }
-
+                        File fi = new File("imagen.jpg");
+                        file = new File(fi.getAbsolutePath());
+                        fos = new FileOutputStream(fi.getAbsolutePath());
+                        
                         size = in.readLong();
                         while (size > 0
                                 && (bytes = in.read(
@@ -110,10 +139,10 @@ public class gestionarConsultas extends Thread {
 
                         break;
                     case "ModificarComic":
-                        if (file.exists()) {
-                            file.delete();
-                        }
-
+                        File fil = new File("imagen.jpg");
+                        file = new File(fil.getAbsolutePath());
+                        fos = new FileOutputStream("./imagen.jpg");
+                        
                         size = in.readLong();
                         while (size > 0
                                 && (bytes = in.read(
